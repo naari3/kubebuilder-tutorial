@@ -13,7 +13,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func validateTest(cronJob *CronJob, valid bool) {
+func validateCronJobTest(cronJob *CronJob, valid bool) {
 	ctx := context.Background()
 
 	err := k8sClient.Create(ctx, cronJob)
@@ -65,14 +65,14 @@ var _ = Describe("CronJob Webhook", func() {
 			},
 		}
 		It("should create a valid CronJob", func() {
-			validateTest(&validCronJob, true)
+			validateCronJobTest(&validCronJob, true)
 		})
 
 		invalidCronJob := validCronJob.DeepCopy()
 		invalidCronJob.ObjectMeta.Name = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" // metadata.name max length is 63
 
 		It("should not create a invalid CronJob", func() {
-			validateTest(&validCronJob, false)
+			validateCronJobTest(&validCronJob, false)
 		})
 	})
 })
